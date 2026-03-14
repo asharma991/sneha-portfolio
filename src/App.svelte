@@ -3,14 +3,43 @@
   import SiteFooter from './lib/components/SiteFooter.svelte'
   import SiteHeader from './lib/components/SiteHeader.svelte'
   import { bitsItems as fallbackBitsItems, experienceItems as fallbackExperienceItems, workItems as fallbackWorkItems } from './lib/content'
-  import { getBitsItems, getExperienceItems, getWorkItems } from './lib/sanity/content'
+  import { getAboutSection, getBitsItems, getExperienceItems, getHomeSections, getWorkItems } from './lib/sanity/content'
 
   let workItems = fallbackWorkItems
   let experienceItems = fallbackExperienceItems
   let bitsItems = fallbackBitsItems
+  let aboutContent = {
+    heading: 'Sneha’s Creative World',
+    intro:
+      'Marketing professional with a niche in creative strategy, narrative systems, and audience-first storytelling. A notebook-first visual language keeps this space warm, playful, and expressive.',
+    tags: ['Creative Direction', 'Brand Strategy', 'Cultural Insights'],
+    profileImageUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=900&q=80',
+  }
+  let homeSections = {
+    experiencesHeading: 'Experiences',
+    experiencesIntro: 'A growing timeline of roles, places, and impact.',
+    experiencesCta: 'Show More ↗',
+    experiencesPageIntro: 'A complete timeline of roles, organizations, and outcomes.',
+    makingSenseHeading: 'Making Sense',
+    makingSenseIntro: 'Essays, research notes, and thought pieces. The full archive lives on a separate page.',
+    makingSenseCta: 'Show More ↗',
+    makingSensePageIntro: 'Full collection of essays and research pieces. Open any entry to view the linked PDF or image.',
+    bitsHeading: 'Bits and Pieces',
+    bitsIntro: 'Images, sounds, and references from Sneha’s everyday inspiration shelf.',
+    bitsCta: 'Show More ↗',
+    bitsPageIntro: 'A larger board of images and music picks that inspire the work.',
+  }
 
   onMount(async () => {
-    const [work, experiences, bits] = await Promise.all([getWorkItems(), getExperienceItems(), getBitsItems()])
+    const [about, sections, work, experiences, bits] = await Promise.all([
+      getAboutSection(aboutContent),
+      getHomeSections(homeSections),
+      getWorkItems(),
+      getExperienceItems(),
+      getBitsItems(),
+    ])
+    aboutContent = about
+    homeSections = sections
     workItems = work
     experienceItems = experiences
     bitsItems = bits
@@ -25,20 +54,17 @@
       <div class="grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-center">
         <div>
           <p class="font-note text-2xl text-ink/85">a little intro</p>
-          <h1 class="mt-2 font-display text-5xl leading-tight text-ink sm:text-6xl">Sneha’s Creative World</h1>
-          <p class="mt-4 max-w-xl text-lg leading-relaxed text-ink/80">
-            Marketing professional with a niche in creative strategy, narrative systems, and audience-first storytelling.
-            A notebook-first visual language keeps this space warm, playful, and expressive.
-          </p>
+          <h1 class="mt-2 font-display text-5xl leading-tight text-ink sm:text-6xl">{aboutContent.heading}</h1>
+          <p class="mt-4 max-w-xl text-lg leading-relaxed text-ink/80">{aboutContent.intro}</p>
           <div class="mt-6 flex flex-wrap gap-2.5">
-            <span class="rounded-full border border-ink/70 bg-white/75 px-3 py-1 text-sm font-medium">Creative Direction</span>
-            <span class="rounded-full border border-ink/70 bg-white/75 px-3 py-1 text-sm font-medium">Brand Strategy</span>
-            <span class="rounded-full border border-ink/70 bg-white/75 px-3 py-1 text-sm font-medium">Cultural Insights</span>
+            {#each aboutContent.tags as tag}
+              <span class="rounded-full border border-ink/70 bg-white/75 px-3 py-1 text-sm font-medium">{tag}</span>
+            {/each}
           </div>
         </div>
         <div class="mx-auto w-full max-w-md">
           <img
-            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=900&q=80"
+            src={aboutContent.profileImageUrl}
             alt="Sneha portrait"
             class="aspect-[4/5] w-full rounded-3xl border-4 border-ink bg-white object-cover shadow-card"
           />
@@ -49,14 +75,14 @@
     <section id="experiences" class="border-b-2 border-dashed border-ink/40 pb-16">
       <div class="mb-6 flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h2 class="font-display text-4xl text-ink sm:text-5xl">Experiences</h2>
-          <p class="mt-2 max-w-2xl text-ink/80">A growing timeline of roles, places, and impact.</p>
+          <h2 class="font-display text-4xl text-ink sm:text-5xl">{homeSections.experiencesHeading}</h2>
+          <p class="mt-2 max-w-2xl text-ink/80">{homeSections.experiencesIntro}</p>
         </div>
         <a
           href="/experiences/"
           class="rounded-full border-2 border-ink bg-white px-5 py-2 text-sm font-semibold uppercase tracking-wide text-ink transition hover:bg-peach"
         >
-          Show More ↗
+          {homeSections.experiencesCta}
         </a>
       </div>
       <ol class="relative space-y-5 border-l-2 border-ink/45 pl-6">
@@ -76,16 +102,14 @@
     <section id="making-sense" class="border-b-2 border-dashed border-ink/40 pb-16">
       <div class="mb-6 flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h2 class="font-display text-4xl text-ink sm:text-5xl">Making Sense</h2>
-          <p class="mt-2 max-w-2xl text-ink/80">
-            Essays, research notes, and thought pieces. The full archive lives on a separate page.
-          </p>
+          <h2 class="font-display text-4xl text-ink sm:text-5xl">{homeSections.makingSenseHeading}</h2>
+          <p class="mt-2 max-w-2xl text-ink/80">{homeSections.makingSenseIntro}</p>
         </div>
         <a
           href="/making-sense/"
           class="rounded-full border-2 border-ink bg-white px-5 py-2 text-sm font-semibold uppercase tracking-wide text-ink transition hover:bg-peach"
         >
-          Show More ↗
+          {homeSections.makingSenseCta}
         </a>
       </div>
       <div class="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
@@ -126,14 +150,14 @@
     <section id="bits-and-pieces" class="pb-8">
       <div class="mb-6 flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h2 class="font-display text-4xl text-ink sm:text-5xl">Bits and Pieces</h2>
-          <p class="mt-2 max-w-2xl text-ink/80">Images, sounds, and references from Sneha’s everyday inspiration shelf.</p>
+          <h2 class="font-display text-4xl text-ink sm:text-5xl">{homeSections.bitsHeading}</h2>
+          <p class="mt-2 max-w-2xl text-ink/80">{homeSections.bitsIntro}</p>
         </div>
         <a
           href="/bits-and-pieces/"
           class="rounded-full border-2 border-ink bg-white px-5 py-2 text-sm font-semibold uppercase tracking-wide text-ink transition hover:bg-peach"
         >
-          Show More ↗
+          {homeSections.bitsCta}
         </a>
       </div>
       <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
