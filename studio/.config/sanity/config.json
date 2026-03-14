@@ -1,0 +1,15 @@
+{
+	"telemetryDisclosed": 1773510198137,
+	"cliLastUpdateCheck": 1773510215334,
+	"cliHasUpdate": "6.1.5",
+	"cliLastUpdateNag": 1773510270783,
+	"authToken": "skFKOU3kZ5abN9w7WTBUfeTU1U3tnnJ84j7bNTG8jAv3x70AcmkKNb9DF4ppBQgIw0buiNtoM0q1t15qF",
+	"authType": "normal",
+	"telemetryConsent": {
+		"value": {
+			"type": "telemetry",
+			"status": "granted"
+		},
+		"updatedAt": 1773511142681
+	}
+}
