@@ -26,5 +26,19 @@ export const siteSettings = defineType({
         }),
       ],
     }),
+    defineField({
+      name: 'resumeFile',
+      title: 'Resume File',
+      type: 'file',
+      options: {
+        accept: '.pdf,.doc,.docx',
+      },
+    }),
+    defineField({
+      name: 'resumeLabel',
+      title: 'Resume Button Label',
+      type: 'string',
+      initialValue: 'Download Resume',
+    }),
   ],
 })

@@ -3,7 +3,7 @@
   import SiteFooter from '../lib/components/SiteFooter.svelte'
   import SiteHeader from '../lib/components/SiteHeader.svelte'
   import { experienceItems as fallbackExperienceItems } from '../lib/content'
-  import { getExperienceItems, getHomeSections } from '../lib/sanity/content'
+  import { getExperienceItems, getHomeSections, getResumeContent } from '../lib/sanity/content'
 
   let experienceItems = fallbackExperienceItems
   let sectionContent = {
@@ -20,11 +20,20 @@
     bitsCta: 'Show More ↗',
     bitsPageIntro: 'A larger board of images and music picks that inspire the work.',
   }
+  let resumeContent = {
+    resumeLabel: 'Download Resume',
+    resumeUrl: '',
+  }
 
   onMount(async () => {
-    const [items, sections] = await Promise.all([getExperienceItems(), getHomeSections(sectionContent)])
+    const [items, sections, resume] = await Promise.all([
+      getExperienceItems(),
+      getHomeSections(sectionContent),
+      getResumeContent(resumeContent),
+    ])
     experienceItems = items
     sectionContent = sections
+    resumeContent = resume
   })
 </script>
 
@@ -32,8 +41,22 @@
 
 <div class="mx-auto min-h-screen max-w-6xl px-4 pb-28 pt-28 sm:px-6 lg:px-10">
   <section>
-    <h1 class="font-display text-5xl text-ink sm:text-6xl">{sectionContent.experiencesHeading}</h1>
-    <p class="mt-3 max-w-3xl text-lg text-ink/80">{sectionContent.experiencesPageIntro}</p>
+    <div class="flex flex-wrap items-end justify-between gap-3">
+      <div>
+        <h1 class="font-display text-5xl text-ink sm:text-6xl">{sectionContent.experiencesHeading}</h1>
+        <p class="mt-3 max-w-3xl text-lg text-ink/80">{sectionContent.experiencesPageIntro}</p>
+      </div>
+      {#if resumeContent.resumeUrl}
+        <a
+          href={resumeContent.resumeUrl}
+          target="_blank"
+          rel="noreferrer"
+          class="rounded-full border-2 border-ink bg-white px-5 py-2 text-sm font-semibold uppercase tracking-wide text-ink transition hover:bg-peach"
+        >
+          {resumeContent.resumeLabel}
+        </a>
+      {/if}
+    </div>
     <ol class="relative mt-10 space-y-8 border-l-2 border-ink/50 pl-6">
       <span class="absolute -bottom-2 -left-[0.72rem] h-5 w-5 rounded-full border-2 border-ink bg-peach"></span>
       {#each [...experienceItems].reverse() as item}

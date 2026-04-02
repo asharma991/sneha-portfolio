@@ -37,6 +37,11 @@ const socialsQuery = groq`*[_type == "siteSettings"][0]{
   }
 }.socials`
 
+const resumeQuery = groq`*[_type == "siteSettings"][0]{
+  resumeLabel,
+  "resumeUrl": resumeFile.asset->url
+}`
+
 const aboutSectionQuery = groq`*[_type == "aboutSection"][0]{
   heading,
   intro,
@@ -157,6 +162,11 @@ export type HomeSectionsContent = {
   bitsPageIntro: string
 }
 
+export type ResumeContent = {
+  resumeLabel: string
+  resumeUrl: string
+}
+
 export async function getAboutSection(fallback: AboutSectionContent) {
   if (!sanityClient) return fallback
   try {
@@ -191,6 +201,20 @@ export async function getHomeSections(fallback: HomeSectionsContent) {
       bitsIntro: item.bitsIntro || fallback.bitsIntro,
       bitsCta: item.bitsCta || fallback.bitsCta,
       bitsPageIntro: item.bitsPageIntro || fallback.bitsPageIntro,
+    }
+  } catch {
+    return fallback
+  }
+}
+
+export async function getResumeContent(fallback: ResumeContent) {
+  if (!sanityClient) return fallback
+  try {
+    const item = await sanityClient.fetch<Partial<ResumeContent> | null>(resumeQuery)
+    if (!item?.resumeUrl) return fallback
+    return {
+      resumeLabel: item.resumeLabel || fallback.resumeLabel,
+      resumeUrl: item.resumeUrl,
     }
   } catch {
     return fallback
